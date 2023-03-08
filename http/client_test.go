@@ -1,8 +1,8 @@
 package http
 
 import (
+	"github.com/biosvos/rest"
 	"github.com/stretchr/testify/require"
-	"rest"
 	"testing"
 )
 

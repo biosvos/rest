@@ -1,6 +1,6 @@
 package http
 
-import "rest"
+import "github.com/biosvos/rest"
 
 var _ rest.Client = &Client{}
 

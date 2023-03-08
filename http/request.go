@@ -1,11 +1,11 @@
 package http
 
 import (
+	"github.com/biosvos/rest"
 	"github.com/pkg/errors"
 	"io"
 	"log"
 	"net/http"
-	"rest"
 )
 
 var _ rest.Request = &Request{}

@@ -1,4 +1,4 @@
-module rest
+module github.com/biosvos/rest
 
 go 1.20
 
