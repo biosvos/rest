@@ -13,5 +13,5 @@ func NewClient() *Client {
 func (n *Client) Get(url string, opts ...rest.GetOption) rest.Request {
 	options := rest.ApplyGetOptions(opts)
 	url = generateUrl(url, options.Queries)
-	return NewRequest(url)
+	return NewRequest("GET", url, options.Headers)
 }
