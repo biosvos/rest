@@ -14,7 +14,7 @@ import (
 
 type GetOptions struct {
 	Queries  map[string]string
-	Headers  map[string]string
+	Headers  map[string][]string
 	Insecure bool
 }
 
@@ -26,7 +26,7 @@ func WithQueries(queries map[string]string) GetOption {
 	}
 }
 
-func WithHeaders(headers map[string]string) GetOption {
+func WithHeaders(headers map[string][]string) GetOption {
 	return func(options *GetOptions) {
 		options.Headers = headers
 	}
@@ -38,7 +38,7 @@ func WithInsecure() GetOption {
 	}
 }
 
-func Get(url string, opts ...GetOption) ([]byte, error) {
+func Get(url string, opts ...GetOption) (*Result, error) {
 	var options GetOptions
 	for _, opt := range opts {
 		opt(&options)
@@ -52,7 +52,7 @@ func Get(url string, opts ...GetOption) ([]byte, error) {
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	setHeaders(req, options.Headers)
+	req.Header = options.Headers
 
 	rsp, err := client.Do(req)
 	if err != nil {
@@ -68,7 +68,11 @@ func Get(url string, opts ...GetOption) ([]byte, error) {
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	return contents, nil
+	return &Result{
+		Header:   rsp.Header,
+		Code:     rsp.StatusCode,
+		Contents: contents,
+	}, nil
 }
 
 func newClient(isSecure bool) *http.Client {
@@ -89,12 +93,6 @@ func newInsecureHTTPClient() *http.Client {
 				InsecureSkipVerify: true, //nolint:gosec
 			},
 		},
-	}
-}
-
-func setHeaders(req *http.Request, headers map[string]string) {
-	for key, value := range headers {
-		req.Header.Set(key, value)
 	}
 }
 
