@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	"github.com/pkg/errors"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/pkg/errors"
 )
 
 type GetOptions struct {
@@ -43,7 +44,7 @@ func Get(url string, opts ...GetOption) ([]byte, error) {
 		opt(&options)
 	}
 
-	uri := generateUrl(url, options.Queries)
+	uri := generateURL(url, options.Queries)
 
 	client := newClient(options.Insecure)
 	defer client.CloseIdleConnections()
@@ -72,12 +73,12 @@ func Get(url string, opts ...GetOption) ([]byte, error) {
 
 func newClient(isSecure bool) *http.Client {
 	if isSecure {
-		return newSecureHttpClient()
+		return newSecureHTTPClient()
 	}
 	return newInsecureHTTPClient()
 }
 
-func newSecureHttpClient() *http.Client {
+func newSecureHTTPClient() *http.Client {
 	return &http.Client{}
 }
 
@@ -85,7 +86,7 @@ func newInsecureHTTPClient() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
+				InsecureSkipVerify: true, //nolint:gosec
 			},
 		},
 	}
@@ -97,7 +98,7 @@ func setHeaders(req *http.Request, headers map[string]string) {
 	}
 }
 
-func generateUrl(url string, queries map[string]string) string {
+func generateURL(url string, queries map[string]string) string {
 	if len(queries) == 0 {
 		return url
 	}
