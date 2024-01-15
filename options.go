@@ -1,7 +1,7 @@
 package rest
 
 type Options struct {
-	Queries    map[string]string
+	Queries    map[string][]string
 	Headers    map[string][]string
 	Insecure   bool
 	Data       any
@@ -10,7 +10,7 @@ type Options struct {
 
 type Option func(options *Options)
 
-func WithQueries(queries map[string]string) Option {
+func WithQueries(queries map[string][]string) Option {
 	return func(options *Options) {
 		options.Queries = queries
 	}

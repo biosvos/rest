@@ -70,7 +70,7 @@ func newInsecureHTTPClient() *http.Client {
 	}
 }
 
-func generateURL(url string, queries map[string]string) string {
+func generateURL(url string, queries map[string][]string) string {
 	if len(queries) == 0 {
 		return url
 	}
@@ -97,10 +97,12 @@ func cutHead(strings []string) (string, []string) {
 	return strings[0], strings[1:]
 }
 
-func query(queries map[string]string) []string {
+func query(queries map[string][]string) []string {
 	var ret []string
-	for key, value := range queries {
-		ret = append(ret, key+"="+url.QueryEscape(value))
+	for key, values := range queries {
+		for _, value := range values {
+			ret = append(ret, key+"="+url.QueryEscape(value))
+		}
 	}
 	return ret
 }
